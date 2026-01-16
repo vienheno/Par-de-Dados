@@ -1,0 +1,27 @@
+**GRUPO 2: Simulador de Lanzamiento de Dados para un Juego**
+
+**Enunciado**
+Crear un simulador de un juego de dados que permita realizar múltiples lanzamientos y analizar resultados estadísticos.
+
+**Temas principales**
+- Generación de números aleatorios
+- Estructuras
+- Archivos
+
+**Requisitos funcionales**
+1. Simular el lanzamiento de dos dados usando números aleatorios.
+2. Permitir al usuario indicar cuántas simulaciones desea realizar.
+3. Registrar los resultados en una estructura que almacene:
+   - Número de lanzamiento
+   - Valor del dado 1
+   - Valor del dado 2
+   - Suma total
+4. Guardar los resultados de todas las simulaciones en un archivo.
+5. Mostrar estadísticas finales:
+   - Número de veces que salió cada suma (2 al 12)
+   - Porcentaje de aparición de cada suma
+
+**Requisitos técnicos**
+- Uso correcto de rand() y srand(time(NULL))
+- Uso de arreglos dinámicos
+- Escritura de resultados en archivo
