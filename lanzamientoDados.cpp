@@ -2,42 +2,43 @@
 #include <string>
 #include <iomanip>
 #include <random>
+#include <vector>
 
 using namespace std;
 
 void titulo(); //Título del proyecto
 void final(); //Fin del programa
-void lanzarDados(int cantidad);
+void estadisticas (int cantidad, vector<int> lanzamiento_n, vector<int> primerDado, vector<int> segundoDado, vector<int> sumaDados);
+void lanzarDados(int cantidad, vector<int> lanzamiento_n, vector<int> primerDado, vector<int> segundoDado, vector<int> sumaDados);
 bool nuevoLanzamiento();
 void validacion(int cantidad);
 
 
 struct lanzamientoDados
 {
-    int cantidad;
-    int dado1;
-    int dado2;
-    int suma;
+    vector<int> i_lanzamiento;
+    vector<int> dado1;
+    vector<int> dado2;
+    vector<int> suma;
 };
 
 
 int main() {
     setlocale(LC_ALL, "es_ES.UTF-8");
-
     srand(time(0));
-
     titulo();
 
     int cantidad;
+    lanzamientoDados lanzar;
 
-    do {
+    //do {
         cout << "Cantidad de lanzamientos: ";
         cin >> cantidad;
 
         validacion (cantidad);
 
-        lanzarDados(cantidad);
-    } while (nuevoLanzamiento());
+        lanzarDados(cantidad, lanzar.i_lanzamiento, lanzar.dado1, lanzar.dado2, lanzar.suma);
+    //} while (nuevoLanzamiento());
 
 
     final();
@@ -53,65 +54,37 @@ void final() {
     cout << endl << endl << "--------------------- Gracias ------------------------" << endl << endl;
 }
 
-void lanzarDados(int cantidad){
-    int dado1, dado2;
-    float suma2=0, suma3=0, suma4=0, suma5=0, suma6=0, suma7=0, suma8=0, suma9=0, suma10=0, suma11=0, suma12=0;
-    lanzamientoDados lanzar[cantidad];
-    
-    for (int i=0; i<cantidad; i++){
-        lanzar[i].dado1 = rand() % 6 + 1;
-        lanzar[i].dado2 = rand() % 6 + 1;
-        lanzar[i].suma = lanzar[i].dado1 + lanzar[i].dado2;
-
-        switch (lanzar[i].suma){
-            case 2: suma2++; break;
-            case 3: suma3++; break;
-            case 4: suma4++; break;
-            case 5: suma5++; break;
-            case 6: suma6++; break;
-            case 7: suma7++; break;
-            case 8: suma8++; break;
-            case 9: suma9++; break;
-            case 10: suma10++; break;
-            case 11: suma11++; break;
-            case 12: suma12++; break;
-        }
+void estadisticas (int cantidad, vector<int> lanzamiento_n, vector<int> primerDado, vector<int> segundoDado, vector<int> sumaDados) {
+    cout<<left<<setw(10)<<"lanzamientos:  ";
+    for (int n : lanzamiento_n) {
+        cout<<left<<setw(10)<<n;
     }
 
-    cout<<"\n---------------  Estadísticas Finales ---------------"<<endl;
+    cout<<endl<<left<<setw(15)<<"Dado 1:  ";
+    for (int n : primerDado) {
+        cout<<left<<setw(10)<<n;
+    }
 
-    cout<<"El número 2 salió "<< suma2 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma2*100.0)/cantidad << "%" <<endl;
+    cout<<endl<<left<<setw(15)<<"Dado 2:  ";
+    for (int n : segundoDado) {
+        cout<<left<<setw(10)<<n;
+    }
 
-    cout<<"El número 3 salió "<< suma3 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma3*100.0)/cantidad << "%" <<endl;
+    cout<<endl<<left<<setw(15)<<"Suma:  ";
+    for (int n : sumaDados) {
+        cout<<left<<setw(10)<<n;
+    }
+}
 
-    cout<<"El número 4 salió "<< suma4 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma4*100.0)/cantidad << "%" <<endl;
+void lanzarDados(int cantidad, vector<int> lanzamiento_n, vector<int> primerDado, vector<int> segundoDado, vector<int> sumaDados){
+    for (int i=0; i<cantidad; i++){
+        lanzamiento_n.push_back(i+1);
+        primerDado.push_back(rand() % 6 + 1);
+        segundoDado.push_back(rand() % 6 + 1);
+        sumaDados.push_back(primerDado[i] + segundoDado[i]);
+    }
 
-    cout<<"El número 5 salió "<< suma5 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma5*100.0)/cantidad << "%" <<endl;
-
-    cout<<"El número 6 salió "<< suma6 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma6*100.0)/cantidad << "%" <<endl;
-
-    cout<<"El número 7 salió "<< suma7 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma7*100.0)/cantidad << "%" <<endl;
-
-    cout<<"El número 8 salió "<< suma8 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma8*100.0)/cantidad << "%" <<endl;
-
-    cout<<"El número 9 salió "<< suma9 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma9*100.0)/cantidad << "%" <<endl;
-
-    cout<<"El número 10 salió "<< suma10 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma10*100.0)/cantidad << "%" <<endl;
-
-    cout<<"El número 11 salió "<< suma11 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma11*100.0)/cantidad << "%" <<endl;
-
-    cout<<"El número 12 salió "<< suma12 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma12*100.0)/cantidad << "%" <<endl;
+    estadisticas (cantidad, lanzamiento_n, primerDado, segundoDado, sumaDados);
 }
 
 void validacion (int cantidad){
@@ -122,6 +95,8 @@ void validacion (int cantidad){
         cin >> cantidad;
     }
 }
+
+    /*
 
 bool nuevoLanzamiento(){
     int opcion;
@@ -135,3 +110,4 @@ bool nuevoLanzamiento(){
     }
     return opcion;
 }
+    */
