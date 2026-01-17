@@ -10,7 +10,8 @@ void titulo(); //Título del proyecto
 void final(); //Fin del programa
 void estadisticas (int cantidad, vector<int> lanzamiento_n, vector<int> primerDado, vector<int> segundoDado, vector<int> sumaDados);
 void lanzarDados(int cantidad, vector<int> lanzamiento_n, vector<int> primerDado, vector<int> segundoDado, vector<int> sumaDados);
-bool nuevoLanzamiento();
+void porcentajeSuma(int cantidad, vector<int> sumaDados);
+//bool nuevoLanzamiento();
 void validacion(int cantidad);
 
 
@@ -55,6 +56,7 @@ void final() {
 }
 
 void estadisticas (int cantidad, vector<int> lanzamiento_n, vector<int> primerDado, vector<int> segundoDado, vector<int> sumaDados) {
+    
     cout<<left<<setw(10)<<"lanzamientos:  ";
     for (int n : lanzamiento_n) {
         cout<<left<<setw(10)<<n;
@@ -85,6 +87,25 @@ void lanzarDados(int cantidad, vector<int> lanzamiento_n, vector<int> primerDado
     }
 
     estadisticas (cantidad, lanzamiento_n, primerDado, segundoDado, sumaDados);
+    cout<<endl<<endl;
+    porcentajeSuma(cantidad, sumaDados);
+    
+}
+
+void porcentajeSuma(int cantidad, vector<int> sumaDados) {
+    int cantidadSumas[11] = {0};
+    cout<<left<<setw(17)<<"Sumas posibles: ";
+    for (int i = 2; i <= 12; i++) {
+        cout<<left<<setw(6)<<i;
+        for (size_t j = 0; j < cantidad; j++) {
+            if (sumaDados[j] == i) cantidadSumas[i-2]++;
+        }      
+    }
+    cout<<setw(17)<<endl<<"Porcentajes (%): ";
+    for (int i = 0; i <= 10; i++) {
+        cout<<left<<setw(6)<<cantidadSumas[i]*100/cantidad;
+        //cout<<"%";
+    }
 }
 
 void validacion (int cantidad){
