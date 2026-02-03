@@ -1,25 +1,31 @@
 #include <iostream>
-#include <string>
+#include <cstdlib>
+#include <ctime>
+#include <fstream>
 #include <iomanip>
-#include <random>
 
 using namespace std;
 
-void titulo(); //Título del proyecto
-void final(); //Fin del programa
-void lanzarDados(int cantidad);
-bool nuevoLanzamiento();
-void validacion(int cantidad);
-
-
-struct lanzamientoDados
+struct lanzamientoDeDados
 {
-    int cantidad;
+    int lanzamientos;
     int dado1;
     int dado2;
-    int suma;
+    int sumaTotal;
 };
 
+void titulo(); 
+void final();
+
+void lanzarDados(lanzamientoDeDados *simulacion, int lanzamientos, int *suma);
+void guardarEnArchivo(lanzamientoDeDados *simulacion, int lanzamientos);
+void estadisticas();
+int contarLanzamientosPrevios();
+bool nuevoLanzamiento();
+void partidaNueva();
+
+void validacion(int &lanzamientos);
+void validacionMenu (int &opc);
 
 int main() {
     setlocale(LC_ALL, "es_ES.UTF-8");
@@ -28,17 +34,47 @@ int main() {
 
     titulo();
 
-    int cantidad;
+    int opc;
 
     do {
-        cout << "Cantidad de lanzamientos: ";
-        cin >> cantidad;
+        cout << "MENU"<<endl;
+        cout << "1. Jugar"<<endl;
+        cout << "2. Partida nueva"<<endl;
+        cout << "3. Ver estadisticas"<<endl;
+        cout << "4. Salir"<<endl;
+        cout << "Seleccione una opcion: ";
+        cin >> opc;
 
-        validacion (cantidad);
+        validacionMenu (opc);
 
-        lanzarDados(cantidad);
-    } while (nuevoLanzamiento());
+        switch (opc) {
+        case 1:{
+            int lanzamientos;
+            cout << "Cantidad de lanzamientos: ";
+            cin >> lanzamientos;
 
+            validacion (lanzamientos);
+
+            lanzamientoDeDados *simulacion = new lanzamientoDeDados[lanzamientos];
+        
+            int suma[13] = {0};
+
+            lanzarDados(simulacion, lanzamientos, suma);
+            guardarEnArchivo(simulacion, lanzamientos);
+            delete[] simulacion;
+
+            break;
+        }
+        case 2:
+            partidaNueva();
+            break;
+
+        case 3:
+            estadisticas();
+            break;
+        }
+
+    } while (opc!=4);
 
     final();
     return 0;
@@ -53,73 +89,113 @@ void final() {
     cout << endl << endl << "--------------------- Gracias ------------------------" << endl << endl;
 }
 
-void lanzarDados(int cantidad){
-    int dado1, dado2;
-    float suma2=0, suma3=0, suma4=0, suma5=0, suma6=0, suma7=0, suma8=0, suma9=0, suma10=0, suma11=0, suma12=0;
-    lanzamientoDados lanzar[cantidad];
+void lanzarDados(lanzamientoDeDados *simulacion, int lanzamientos, int *suma){
     
-    for (int i=0; i<cantidad; i++){
-        lanzar[i].dado1 = rand() % 6 + 1;
-        lanzar[i].dado2 = rand() % 6 + 1;
-        lanzar[i].suma = lanzar[i].dado1 + lanzar[i].dado2;
+    for (int i=0; i<lanzamientos; i++){
+        simulacion[i].lanzamientos = i+1;
+        simulacion[i].dado1 = rand() % 6 + 1;
+        simulacion[i].dado2 = rand() % 6 + 1;
+        simulacion[i].sumaTotal = simulacion[i].dado1 + simulacion[i].dado2;
 
-        switch (lanzar[i].suma){
-            case 2: suma2++; break;
-            case 3: suma3++; break;
-            case 4: suma4++; break;
-            case 5: suma5++; break;
-            case 6: suma6++; break;
-            case 7: suma7++; break;
-            case 8: suma8++; break;
-            case 9: suma9++; break;
-            case 10: suma10++; break;
-            case 11: suma11++; break;
-            case 12: suma12++; break;
-        }
+        suma[simulacion[i].sumaTotal]++;
     }
-
-    cout<<"\n---------------  Estadísticas Finales ---------------"<<endl;
-
-    cout<<"El número 2 salió "<< suma2 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma2*100.0)/cantidad << "%" <<endl;
-
-    cout<<"El número 3 salió "<< suma3 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma3*100.0)/cantidad << "%" <<endl;
-
-    cout<<"El número 4 salió "<< suma4 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma4*100.0)/cantidad << "%" <<endl;
-
-    cout<<"El número 5 salió "<< suma5 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma5*100.0)/cantidad << "%" <<endl;
-
-    cout<<"El número 6 salió "<< suma6 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma6*100.0)/cantidad << "%" <<endl;
-
-    cout<<"El número 7 salió "<< suma7 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma7*100.0)/cantidad << "%" <<endl;
-
-    cout<<"El número 8 salió "<< suma8 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma8*100.0)/cantidad << "%" <<endl;
-
-    cout<<"El número 9 salió "<< suma9 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma9*100.0)/cantidad << "%" <<endl;
-
-    cout<<"El número 10 salió "<< suma10 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma10*100.0)/cantidad << "%" <<endl;
-
-    cout<<"El número 11 salió "<< suma11 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma11*100.0)/cantidad << "%" <<endl;
-
-    cout<<"El número 12 salió "<< suma12 << " veces."<<endl;
-    cout<<"Pocentaje de aparición: " << (suma12*100.0)/cantidad << "%" <<endl;
 }
 
-void validacion (int cantidad){
-    while(cantidad<1||cin.fail()){
+void guardarEnArchivo(lanzamientoDeDados *simulacion, int lanzamientos){
+    int lanzamientosPrevios = contarLanzamientosPrevios();
+
+    ofstream archivo("resultados_dados.txt", ios::app);
+
+    if(!archivo){
+        cout << "Error al crear el archivo." << endl;
+        return;
+    }
+
+    if (lanzamientosPrevios == 0) {
+        archivo << "L D1 D2 T" << endl;
+    }
+
+    for (int i=0; i<lanzamientos; i++){
+        archivo << simulacion[i].lanzamientos<<" "
+                << simulacion[i].dado1<<" "
+                << simulacion[i].dado2<<" "
+                << simulacion[i].sumaTotal<<endl;
+    }
+
+    archivo.close();
+}
+
+void estadisticas(){
+    ifstream archivo("resultados_dados.txt");
+
+    int contador[13] = {0};
+    int total = 0;
+
+    if (!archivo) {
+        cout << "No hay datos registrados.\n";
+        return;
+    }
+
+    string linea;
+    getline(archivo, linea);
+
+    int num, d1, d2, suma;
+
+    while (archivo >> num >> d1 >> d2 >> suma) {
+        contador[suma]++;
+        total++;
+    }
+
+    archivo.close();
+
+    cout << "\n--------------- Estadísticas Acumuladas -----------------\n";
+    cout << fixed << setprecision(2);
+
+    if (total == 0) {
+        cout << "No hay lanzamientos registrados.\n";
+        return;
+    }
+
+    for (int i = 2; i <= 12; i++) {
+        double porcentaje = (contador[i] * 100.0) / total;
+        cout << i << ": " << porcentaje << "%" << endl;
+    }
+}
+
+int contarLanzamientosPrevios(){
+    ifstream archivo("resultados_dados.txt");
+
+    int contador = 0;
+    string linea;
+
+    if (!archivo)
+        return 0;
+
+    getline(archivo, linea);
+
+    while (getline(archivo, linea)) {
+        contador++;
+    }
+
+    archivo.close();
+    return contador;
+}
+
+void validacion (int &lanzamientos){
+    while(lanzamientos<1||cin.fail()){
         cin.clear();         
         cin.ignore(1000, '\n');
         cout << "Error. Ingresa un número a partir del 1 para jugar." << endl;
-        cin >> cantidad;
+        cin >> lanzamientos;
+    }
+}
+
+void validacionMenu (int &opc){
+    while(opc<1||opc>4||cin.fail()){
+        cin.clear();         
+        cin.ignore(1000, '\n');
+        cout << "Error. Ingresa una opción válida del menú." << endl;
+        cin >> opc;
     }
 }
 
@@ -134,4 +210,17 @@ bool nuevoLanzamiento(){
         cin >> opcion;
     }
     return opcion;
+}
+
+void partidaNueva(){
+    ofstream archivo("resultados_dados.txt");
+
+    if (!archivo) {
+        cout << "Error al reiniciar la partida." << endl;
+        return;
+    }
+
+    archivo.close();
+
+    cout << "Partida nueva iniciada. Historial borrado.\n";
 }
