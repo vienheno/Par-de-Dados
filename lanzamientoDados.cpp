@@ -15,17 +15,18 @@ struct lanzamientoDeDados
 };
 
 void titulo(); 
-void final();
 
-void lanzarDados(lanzamientoDeDados *simulacion, int lanzamientos, int *suma);
+void lanzarDados(lanzamientoDeDados *simulacion, int lanzamientos);
 void guardarEnArchivo(lanzamientoDeDados *simulacion, int lanzamientos);
 void estadisticas();
-int contarLanzamientosPrevios();
-bool nuevoLanzamiento();
 void partidaNueva();
+
+int contarLanzamientosPrevios();
 
 void validacion(int &lanzamientos);
 void validacionMenu (int &opc);
+
+void final();
 
 int main() {
     setlocale(LC_ALL, "es_ES.UTF-8");
@@ -37,13 +38,14 @@ int main() {
     int opc;
 
     do {
-        cout << "MENU"<<endl;
+        cout << "--------------- MENU ---------------"<<endl;
         cout << "1. Jugar"<<endl;
         cout << "2. Partida nueva"<<endl;
         cout << "3. Ver estadisticas"<<endl;
         cout << "4. Salir"<<endl;
         cout << "Seleccione una opcion: ";
         cin >> opc;
+        cout << "-----------------------------------"<<endl;
 
         validacionMenu (opc);
 
@@ -56,20 +58,22 @@ int main() {
             validacion (lanzamientos);
 
             lanzamientoDeDados *simulacion = new lanzamientoDeDados[lanzamientos];
-        
-            int suma[13] = {0};
 
-            lanzarDados(simulacion, lanzamientos, suma);
+            lanzarDados(simulacion, lanzamientos);
             guardarEnArchivo(simulacion, lanzamientos);
+
             delete[] simulacion;
 
             break;
         }
+
         case 2:
+
             partidaNueva();
             break;
 
         case 3:
+
             estadisticas();
             break;
         }
@@ -77,6 +81,7 @@ int main() {
     } while (opc!=4);
 
     final();
+
     return 0;
 }
 
@@ -85,19 +90,13 @@ void titulo() {
     cout << "--------------- Lanzamiento de Dados -----------------" << endl;
 }
 
-void final() {
-    cout << endl << endl << "--------------------- Gracias ------------------------" << endl << endl;
-}
-
-void lanzarDados(lanzamientoDeDados *simulacion, int lanzamientos, int *suma){
+void lanzarDados(lanzamientoDeDados *simulacion, int lanzamientos){
     
     for (int i=0; i<lanzamientos; i++){
         simulacion[i].lanzamientos = i+1;
         simulacion[i].dado1 = rand() % 6 + 1;
         simulacion[i].dado2 = rand() % 6 + 1;
         simulacion[i].sumaTotal = simulacion[i].dado1 + simulacion[i].dado2;
-
-        suma[simulacion[i].sumaTotal]++;
     }
 }
 
@@ -112,14 +111,21 @@ void guardarEnArchivo(lanzamientoDeDados *simulacion, int lanzamientos){
     }
 
     if (lanzamientosPrevios == 0) {
-        archivo << "L D1 D2 T" << endl;
+        archivo << left 
+                << setw(12) << "No."
+                << setw(12) << "Dado1"
+                << setw(12) << "Dado2"
+                << setw(12) << "Total" 
+                << endl;
     }
 
     for (int i=0; i<lanzamientos; i++){
-        archivo << simulacion[i].lanzamientos<<" "
-                << simulacion[i].dado1<<" "
-                << simulacion[i].dado2<<" "
-                << simulacion[i].sumaTotal<<endl;
+        archivo << left
+                << setw(12) << simulacion[i].lanzamientos
+                << setw(12) << simulacion[i].dado1
+                << setw(12) << simulacion[i].dado2
+                << setw(12) << simulacion[i].sumaTotal
+                <<endl;
     }
 
     archivo.close();
@@ -129,10 +135,9 @@ void estadisticas(){
     ifstream archivo("resultados_dados.txt");
 
     int contador[13] = {0};
-    int total = 0;
 
     if (!archivo) {
-        cout << "No hay datos registrados.\n";
+        cout << "No hay datos registrados." << endl;
         return;
     }
 
@@ -143,23 +148,36 @@ void estadisticas(){
 
     while (archivo >> num >> d1 >> d2 >> suma) {
         contador[suma]++;
-        total++;
     }
 
     archivo.close();
 
-    cout << "\n--------------- Estadísticas Acumuladas -----------------\n";
+    cout << "--------------- Estadísticas Acumuladas -----------------" << endl;
     cout << fixed << setprecision(2);
 
-    if (total == 0) {
-        cout << "No hay lanzamientos registrados.\n";
+    if (contarLanzamientosPrevios() == 0) {
+        cout << "No hay lanzamientos registrados." << endl;
         return;
     }
 
     for (int i = 2; i <= 12; i++) {
-        double porcentaje = (contador[i] * 100.0) / total;
+        double porcentaje = (contador[i] * 100.0) / contarLanzamientosPrevios();
         cout << i << ": " << porcentaje << "%" << endl;
     }
+}
+
+void partidaNueva(){
+    ofstream archivo("resultados_dados.txt");
+
+    if (!archivo) {
+        cout << "Error al reiniciar la partida." << endl;
+        return;
+    }
+
+    archivo.close();
+
+    cout << "Partida nueva iniciada. Historial borrado." << endl;
+
 }
 
 int contarLanzamientosPrevios(){
@@ -199,28 +217,6 @@ void validacionMenu (int &opc){
     }
 }
 
-bool nuevoLanzamiento(){
-    int opcion;
-    cout << "¿Quieres volver a jugar?\n1.- Sí\t0.- No" << endl;
-    cin >> opcion;
-    while (opcion!=1 && opcion!=0 || cin.fail()){
-        cin.clear();         
-        cin.ignore(1000, '\n');
-        cout << "Error. Ingresa una opción válida\n1.- Sí\t0.- No" << endl;
-        cin >> opcion;
-    }
-    return opcion;
-}
-
-void partidaNueva(){
-    ofstream archivo("resultados_dados.txt");
-
-    if (!archivo) {
-        cout << "Error al reiniciar la partida." << endl;
-        return;
-    }
-
-    archivo.close();
-
-    cout << "Partida nueva iniciada. Historial borrado.\n";
+void final() {
+    cout << endl << endl << "--------------------- Gracias ------------------------" << endl << endl;
 }
