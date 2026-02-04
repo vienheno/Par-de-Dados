@@ -1,11 +1,8 @@
-No.         Dado1       Dado2       Total       
-1           4           3           7           
-2           1           6           7           
-3           5           6           11          
-4           2           6           8           
-5           5           4           9           
-1           2           3           5           
-2           4           3           7           
-3           6           2           8           
-4           1           2           3           
-5           2           1           3           
+Historial de Lanzamientos de Dados
+Dado1     Dado2     Suma      
+==============================
+3         1         4         
+1         1         2         
+4         5         9         
+5         4         9         
+3         5         8         
