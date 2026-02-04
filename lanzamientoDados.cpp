@@ -96,14 +96,14 @@ void porcentajeSuma(int cantidad, vector<int> sumaDados) {
     int cantidadSumas[11] = {0};
     cout<<left<<setw(17)<<"Sumas posibles: ";
     for (int i = 2; i <= 12; i++) {
-        cout<<left<<setw(6)<<i;
+        cout<<right<<setw(6)<<i;
         for (size_t j = 0; j < cantidad; j++) {
             if (sumaDados[j] == i) cantidadSumas[i-2]++;
         }      
     }
-    cout<<setw(17)<<endl<<"Porcentajes (%): ";
+    cout<<endl<<"Porcentajes:      ";
     for (int i = 0; i <= 10; i++) {
-        cout<<left<<setw(6)<<cantidadSumas[i]*100/cantidad;
+        cout<<right<<setw(5)<<cantidadSumas[i]*100/cantidad<<"%";
         //cout<<"%";
     }
 }
