@@ -39,7 +39,7 @@ int main() {
 
     do {
         cout << "--------------- MENU ---------------"<<endl;
-        cout << "1. Jugar"<<endl;
+        cout << "1. Lanzamiento(s)"<<endl;
         cout << "2. Partida nueva"<<endl;
         cout << "3. Ver estadisticas"<<endl;
         cout << "4. Salir"<<endl;
@@ -87,7 +87,7 @@ int main() {
 
 void titulo() {
     system("cls");
-    cout << "--------------- Lanzamiento de Dados -----------------" << endl;
+    cout << "------- Lanzamiento de Dados -------" << endl;
 }
 
 void lanzarDados(lanzamientoDeDados *simulacion, int lanzamientos){
@@ -152,7 +152,7 @@ void estadisticas(){
 
     archivo.close();
 
-    cout << "--------------- Estadísticas Acumuladas -----------------" << endl;
+    cout << "----- Estadísticas Acumuladas -----" << endl;
     cout << fixed << setprecision(2);
 
     if (contarLanzamientosPrevios() == 0) {
@@ -218,5 +218,5 @@ void validacionMenu (int &opc){
 }
 
 void final() {
-    cout << endl << endl << "--------------------- Gracias ------------------------" << endl << endl;
+    cout << endl << endl << "------------- Gracias -------------" << endl << endl;
 }
