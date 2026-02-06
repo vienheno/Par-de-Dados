@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <sstream>
 
+
 using namespace std;
 
 struct lanzamientoDeDados
