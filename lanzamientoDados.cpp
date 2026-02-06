@@ -40,8 +40,6 @@ void validacionMenu(int &opc);
 
 void final();
 
-void limpiarPantalla();
-
 int main() {
     setlocale(LC_ALL, "es_ES.UTF-8");
 
@@ -101,6 +99,12 @@ int main() {
 
 void titulo()
 {
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+    
     cout << "\n";
     cout << "╔════════════════════════════════════════════════════╗\n";
     cout << "║          SIMULADOR DE LANZAMIENTO DE DADOS         ║\n";
@@ -184,14 +188,8 @@ void estadisticas() {
     int contador[13] = {0};
     string linea;
 
-    // Saltar comentarios y encabezados
     while (getline(archivo, linea))
     {
-        if (linea.empty() || linea[0] == '#')
-        {
-            continue;
-        }
-        // Leer los datos
         istringstream iss(linea);
         int d1, d2, suma;
         if (iss >> d1 >> d2 >> suma)
@@ -202,7 +200,7 @@ void estadisticas() {
 
     archivo.close();
 
-    if (contarLanzamientosPrevios() == 0)
+    if (contarLanzamientosPrevios() == -3)
     {
         cout << "\nNo hay lanzamientos registrados.\n"
              << endl;
