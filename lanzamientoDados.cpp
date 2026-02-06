@@ -41,8 +41,6 @@ void validacionMenu(int &opc);
 
 void final();
 
-void limpiarPantalla();
-
 int main() {
     setlocale(LC_ALL, "es_ES.UTF-8");
 
@@ -64,6 +62,7 @@ int main() {
 
         switch (opc) {
         case JUGAR: {
+            titulo();
             int lanzamientos;
 
             cout << "\nCantidad de lanzamientos: ";
@@ -81,11 +80,13 @@ int main() {
             break;
             }
         case PARTIDA_NUEVA: {
+            titulo();
             partidaNueva();
             pausar();
             break;
             }
         case ESTADISTICAS: {
+            titulo();
             estadisticas();
             pausar();
             break;
@@ -107,6 +108,7 @@ void titulo()
     #else
         system("clear");
     #endif
+    
     cout << "\n";
     cout << "╔════════════════════════════════════════════════════╗\n";
     cout << "║          SIMULADOR DE LANZAMIENTO DE DADOS         ║\n";
@@ -125,6 +127,7 @@ void lanzarDados(lanzamientoDeDados *simulacion, int lanzamientos) {
 }
 
 void mostrarResultados(lanzamientoDeDados *simulacion, int lanzamientos) {
+    titulo();
     cout << "\nResultados del juego:\n\n";
     cout << left << setw(12) << "Lanzamiento"
          << setw(12) << "Dado 1"
@@ -178,6 +181,7 @@ void guardarEnArchivo(lanzamientoDeDados *simulacion, int lanzamientos) {
 }
 
 void estadisticas() {
+    titulo();
     ifstream archivo("resultados_dados.txt");
 
     if (!archivo)
@@ -190,14 +194,8 @@ void estadisticas() {
     int contador[13] = {0};
     string linea;
 
-    // Saltar comentarios y encabezados
     while (getline(archivo, linea))
     {
-        if (linea.empty() || linea[0] == '#')
-        {
-            continue;
-        }
-        // Leer los datos
         istringstream iss(linea);
         int d1, d2, suma;
         if (iss >> d1 >> d2 >> suma)
@@ -208,7 +206,7 @@ void estadisticas() {
 
     archivo.close();
 
-    if (contarLanzamientosPrevios() == 0)
+    if (contarLanzamientosPrevios() == -3)
     {
         cout << "\nNo hay lanzamientos registrados.\n"
              << endl;
@@ -220,11 +218,6 @@ void estadisticas() {
 
 void mostrarEstadisticas(int contador[], int totalLanzamientos)
 {
-    #ifdef _WIN32
-        system("cls");
-    #else
-        system("clear");
-    #endif
     cout << "\n══════════════ ESTADÍSTICAS ACUMULADAS ═══════════════" << endl;
     cout << "  Total de lanzamientos: " << totalLanzamientos << endl;
     cout << "══════════════════════════════════════════════════════\n"
@@ -267,6 +260,7 @@ void mostrarEstadisticas(int contador[], int totalLanzamientos)
 
 void partidaNueva()
 {
+    titulo();
     ofstream archivo("resultados_dados.txt");
 
     if (!archivo)
