@@ -1,8 +1,0 @@
-Historial de Lanzamientos de Dados
-Dado1     Dado2     Suma      
-==============================
-4         4         8         
-1         3         4         
-3         6         9         
-2         3         5         
-5         4         9         
