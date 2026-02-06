@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <sstream>
 
+
 using namespace std;
 
 struct lanzamientoDeDados
@@ -101,6 +102,11 @@ int main() {
 
 void titulo()
 {
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
     cout << "\n";
     cout << "╔════════════════════════════════════════════════════╗\n";
     cout << "║          SIMULADOR DE LANZAMIENTO DE DADOS         ║\n";
@@ -214,6 +220,11 @@ void estadisticas() {
 
 void mostrarEstadisticas(int contador[], int totalLanzamientos)
 {
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
     cout << "\n══════════════ ESTADÍSTICAS ACUMULADAS ═══════════════" << endl;
     cout << "  Total de lanzamientos: " << totalLanzamientos << endl;
     cout << "══════════════════════════════════════════════════════\n"
