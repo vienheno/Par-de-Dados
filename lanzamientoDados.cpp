@@ -64,7 +64,6 @@ int main() {
         case JUGAR: {
             titulo();
             int lanzamientos;
-
             cout << "\nCantidad de lanzamientos: ";
             cin >> lanzamientos;
             validacion(lanzamientos);
@@ -183,36 +182,23 @@ void guardarEnArchivo(lanzamientoDeDados *simulacion, int lanzamientos) {
 void estadisticas() {
     titulo();
     ifstream archivo("resultados_dados.txt");
-
-    if (!archivo)
-    {
-        cout << "\n❌ No hay datos registrados.\n"
-             << endl;
+    if (!archivo) {
+        cout << "\n❌ No hay datos registrados.\n"<< endl;
         return;
     }
-
     int contador[13] = {0};
     string linea;
-
-    while (getline(archivo, linea))
-    {
+    while (getline(archivo, linea)) {
         istringstream iss(linea);
         int d1, d2, suma;
-        if (iss >> d1 >> d2 >> suma)
-        {
-            contador[suma]++;
-        }
+        if (iss >> d1 >> d2 >> suma) contador[suma]++;
     }
-
     archivo.close();
 
-    if (contarLanzamientosPrevios() == -3)
-    {
-        cout << "\nNo hay lanzamientos registrados.\n"
-             << endl;
+    if (contarLanzamientosPrevios() == -3) {
+        cout << "\nNo hay lanzamientos registrados.\n"<< endl;
         return;
     }
-
     mostrarEstadisticas(contador, contarLanzamientosPrevios());
 }
 
@@ -274,8 +260,7 @@ void partidaNueva()
     cout << "Partida nueva iniciada. Historial borrado." << endl;
 }
 
-int contarLanzamientosPrevios()
-{
+int contarLanzamientosPrevios() {
     ifstream archivo("resultados_dados.txt");
 
     int contador = -3;
@@ -284,8 +269,7 @@ int contarLanzamientosPrevios()
     if (!archivo)
         return 0;
 
-    while (getline(archivo, linea))
-    {
+    while (getline(archivo, linea)) {
         contador++;
     }
 
